@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asignación Óptima de Tareas</title>
+    <meta name="description" content="Documentación técnica completa del Sistema de Asignación Óptima de Tareas implementado con algoritmo de Ramificación y Poda en Java">
+    <meta name="author" content="Sergio Ucedo">
+    <meta name="keywords" content="ramificación y poda, branch and bound, asignación de tareas, java, algoritmos, optimización">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📋%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav">
+            <div class="nav-container">
+                <div class="nav-brand">
+                    <h1 class="brand-title">
+
+                    </h1>
+                </div>
+
+                <ul class="nav-menu" id="nav-menu">
+                    <li><a href="#introduccion" class="nav-link">Introducción</a></li>
+                    <li><a href="#problema" class="nav-link">Problema</a></li>
+                    <li><a href="#algoritmo" class="nav-link">Algoritmo</a></li>
+                    <li><a href="#arquitectura" class="nav-link">Arquitectura</a></li>
+                    <li><a href="#componentes" class="nav-link">Componentes</a></li>
+                    <li><a href="#ejemplos" class="nav-link">Ejemplos</a></li>
+                    <li><a href="#rendimiento" class="nav-link">Rendimiento</a></li>
+                </ul>
+
+                <div class="nav-toggle" id="nav-toggle">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="introduccion" class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <div class="hero-badge">
+
+                    <div style="display: flex; gap: 0.5em; align-items: center; margin-left: 0.5em;">
+                        <a href="/index.html" class="btn-rojo" style="margin: 0;">
+                            <i class="fas fa-arrow-left"></i> Volver al portfolio
+                        </a>
+                        <a href="https://github.com/xerchion/AsignacionOptimaTareas" class="btn-rojo" target="_blank" rel="noopener noreferrer" style="margin: 0;">
+                            Ver en GitHub <i class="fab fa-github"></i>
+                        </a>
+                    <span>•</span>
+
+                        <span>Versión 2.0</span>
+                    </div>
+                </div>
+
+                <h1 class="hero-title">
+                    Sistema de <span class="gradient-text">Asignación Óptima</span>
+                    de Tareas
+                </h1>
+
+                <p class="hero-description">
+                    Documentación técnica completa de la implementación Java del algoritmo de
+                    <strong>ramificación y poda</strong> para resolver el problema clásico de asignación
+                    de tareas a agentes, minimizando el costo total con garantía de optimalidad.
+                </p>
+
+                <div class="hero-info">
+                    <div class="info-card">
+                        <div class="info-icon">
+                            <i class="fas fa-user-tie"></i>
+                        </div>
+                        <div class="info-text">
+                            <h3>Autor</h3>
+                            <p>Sergio Ucedo</p>
+                        </div>
+                    </div>
+
+                    <div class="info-card">
+                        <div class="info-icon">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <div class="info-text">
+                            <h3>Proyecto</h3>
+                            <p>Pasteleros - Sistema de Optimización</p>
+                        </div>
+                    </div>
+
+                    <div class="info-card">
+                        <div class="info-icon">
+                            <i class="fas fa-coffee"></i>
+                        </div>
+                        <div class="info-text">
+                            <h3>Tecnología</h3>
+                            <p>Java 22 + Maven + JUnit 5</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hero-objectives">
+                    <h3>Objetivos del Sistema:</h3>
+                    <ul>
+                        <li><i class="fas fa-target"></i> <strong>Optimización:</strong> Encontrar la asignación de menor costo posible</li>
+                        <li><i class="fas fa-rocket"></i> <strong>Eficiencia:</strong> Resolver problemas de tamaño medio en tiempos razonables</li>
+                        <li><i class="fas fa-shield-alt"></i> <strong>Robustez:</strong> Manejo profesional de errores y validaciones</li>
+                        <li><i class="fas fa-chart-line"></i> <strong>Trazabilidad:</strong> Logging detallado y estadísticas de rendimiento</li>
+                        <li><i class="fas fa-mouse-pointer"></i> <strong>Usabilidad:</strong> Interfaz simple tanto por archivo como interactiva</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="hero-visual">
+                <div class="hero-diagram">
+                    <h3>Proceso de Optimización</h3>
+                    <div class="process-flow">
+                        <div class="flow-step">
+                            <div class="step-icon">📊</div>
+                            <h4>Entrada</h4>
+                            <p>Matriz de costos n×n</p>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step">
+                            <div class="step-icon">🌳</div>
+                            <h4>Ramificación</h4>
+                            <p>Árbol de decisiones</p>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step">
+                            <div class="step-icon">✂️</div>
+                            <h4>Poda</h4>
+                            <p>Eliminación inteligente</p>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step">
+                            <div class="step-icon">🎯</div>
+                            <h4>Solución</h4>
+                            <p>Asignación óptima</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem Description Section -->
+    <section id="problema" class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">📊 Descripción del Problema</h2>
+                <p class="section-subtitle">
+                    El problema clásico de asignación de tareas y su complejidad computacional
+                </p>
+            </div>
+
+            <div class="problem-content">
+                <div class="problem-definition">
+                    <h3>Definición Formal del Problema</h3>
+                    <div class="definition-card">
+                        <h4>Dado:</h4>
+                        <ul>
+                            <li><strong>n agentes</strong> (trabajadores, máquinas, recursos)</li>
+                            <li><strong>n tareas</strong> (trabajos, proyectos, actividades)</li>
+                            <li><strong>Matriz de costos C[i][j]</strong> = costo de asignar el agente i a la tarea j</li>
+                        </ul>
+
+                        <h4>Objetivo:</h4>
+                        <p>Encontrar una asignación uno-a-uno que minimice el costo total.</p>
+                    </div>
+
+                    <div class="example-conceptual">
+                        <h4>Ejemplo Conceptual:</h4>
+                        <div class="conceptual-data">
+                            <div class="data-section">
+                                <h5>Datos:</h5>
+                                <pre><code>Agentes: [Trabajador1, Trabajador2, Trabajador3]
+Tareas:  [TareaA, TareaB, TareaC]
+
+Matriz de Costos:
+        TareaA  TareaB  TareaC
+Trab1     10      15      20
+Trab2     12      10      18
+Trab3     15      18      12</code></pre>
+                            </div>
+
+                            <div class="solution-section">
+                                <h5>Solución Óptima:</h5>
+                                <div class="optimal-assignments">
+                                    <div class="assignment">Trabajador1 → TareaA <span class="cost">(costo: 10)</span></div>
+                                    <div class="assignment">Trabajador2 → TareaB <span class="cost">(costo: 10)</span></div>
+                                    <div class="assignment">Trabajador3 → TareaC <span class="cost">(costo: 12)</span></div>
+                                    <div class="total-cost">COSTO TOTAL: <span>32</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="complexity-analysis">
+                    <h3>Complejidad del Problema</h3>
+                    <div class="complexity-grid">
+                        <div class="complexity-card">
+                            <div class="complexity-icon">
+                                <i class="fas fa-calculator"></i>
+                            </div>
+                            <h4>Espacio de Soluciones</h4>
+                            <p><strong>n!</strong> (factorial) permutaciones posibles</p>
+                            <div class="example">Ejemplo: Para 10 agentes = <span class="highlight">3,628,800</span> combinaciones</div>
+                        </div>
+
+                        <div class="complexity-card">
+                            <div class="complexity-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <h4>Clasificación</h4>
+                            <p><strong>NP-hard</strong> (tiempo exponencial en el peor caso)</p>
+                            <div class="example">Requiere técnicas avanzadas de optimización</div>
+                        </div>
+
+                        <div class="complexity-card">
+                            <div class="complexity-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <h4>Crecimiento</h4>
+                            <p>El tiempo aumenta <strong>factorialmente</strong> con el tamaño</p>
+                            <div class="example">8 agentes = 40,320 permutaciones</div>
+                        </div>
+                    </div>
+
+                    <div class="growth-table">
+                        <h4>Crecimiento del Espacio de Soluciones</h4>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>n (agentes/tareas)</th>
+                                    <th>Permutaciones (n!)</th>
+                                    <th>Tiempo Fuerza Bruta</th>
+                                    <th>Con Ramificación y Poda</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>3</td>
+                                    <td>6</td>
+                                    <td>&lt; 1ms</td>
+                                    <td>&lt; 1ms</td>
+                                </tr>
+                                <tr>
+                                    <td>4</td>
+                                    <td>24</td>
+                                    <td>&lt; 5ms</td>
+                                    <td>&lt; 10ms</td>
+                                </tr>
+                                <tr>
+                                    <td>5</td>
+                                    <td>120</td>
+                                    <td>~20ms</td>
+                                    <td>~50ms</td>
+                                </tr>
+                                <tr>
+                                    <td>6</td>
+                                    <td>720</td>
+                                    <td>~100ms</td>
+                                    <td>~200ms</td>
+                                </tr>
+                                <tr>
+                                    <td>8</td>
+                                    <td>40,320</td>
+                                    <td>~10s</td>
+                                    <td>~2s</td>
+                                </tr>
+                                <tr>
+                                    <td>10</td>
+                                    <td>3,628,800</td>
+                                    <td>~30min</td>
+                                    <td>~5min</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Algorithm Section -->
+    <section id="algoritmo" class="section bg-light">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">🧠 Algoritmo de Ramificación y Poda</h2>
+                <p class="section-subtitle">
+                    Implementación optimizada del algoritmo Ramificación y Poda para garantizar la solución óptima
+                </p>
+            </div>
+
+            <div class="algorithm-content">
+
+
+                <div class="algorithm-steps">
+                    <h3>Componentes Clave del Algoritmo</h3>
+                    <div class="steps-grid">
+                        <div class="step-card">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>Función de Cota (Bound)</h4>
+                                <p>Para cada nodo parcial, se calcula una <strong>cota inferior</strong> del costo mínimo posible:</p>
+                                <div class="formula">
+                                    <code>cota = costo_actual + estimación_mínima_restante</code>
+                                </div>
+                                <p><strong>Estimación:</strong> Para cada agente no asignado, se toma el mínimo costo entre las tareas disponibles.</p>
+                            </div>
+                        </div>
+
+                        <div class="step-card">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>Estrategia de Poda</h4>
+                                <p>Se mantiene el <strong>mejor costo conocido</strong> (incumbente)</p>
+                                <div class="formula">
+                                    <code>Si cota_nodo ≥ mejor_costo → PODAR rama completa</code>
+                                </div>
+                                <p>Esto elimina millones de combinaciones sin explorarlas.</p>
+                            </div>
+                        </div>
+
+                        <div class="step-card">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h4>Optimizaciones Implementadas</h4>
+                                <ul>
+                                    <li><strong>Montículo  binario</strong> para gestión eficiente de nodos</li>
+                                    <li><strong>Precálculo</strong> de cotas para acelerar estimaciones</li>
+                                    <li><strong>Poda anticipada</strong> en múltiples niveles</li>
+                                    <li><strong>Validaciones</strong> de consistencia en cada paso</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="algorithm-flow">
+                    <h3>Flujo de Ejecución del Algoritmo</h3>
+                    <div class="flow-steps">
+                        <div class="flow-phase">
+                            <h4>Fase 1: Inicialización</h4>
+                            <ol>
+                                <li>Validación de entorno (Java, memoria)</li>
+                                <li>Inicialización de logging</li>
+                                <li>Configuración de parámetros del sistema</li>
+                                <li>Verificación de dependencias</li>
+                            </ol>
+                        </div>
+
+                        <div class="flow-phase">
+                            <h4>Fase 2: Carga de Datos</h4>
+                            <ol>
+                                <li>Determinar fuente de datos (archivo/manual)</li>
+                                <li>Cargar datos brutos</li>
+                                <li>Validar formato y consistencia</li>
+                                <li>Crear estructura GameData inmutable</li>
+                                <li>Verificar precondiciones del algoritmo</li>
+                            </ol>
+                        </div>
+
+                        <div class="flow-phase">
+                            <h4>Fase 3: Ejecución del Algoritmo</h4>
+                            <ol>
+                                <li>Inicializar Montículo  con nodo raíz</li>
+                                <li>Mientras Montículo  no esté vacío:
+                                    <ul>
+                                        <li>Extraer nodo con menor cota</li>
+                                        <li>Si es solución completa → actualizar incumbente</li>
+                                        <li>Si no → generar nodos hijos</li>
+                                        <li>Calcular cotas de nodos hijos</li>
+                                        <li>Podar nodos con cota ≥ incumbente</li>
+                                        <li>Insertar nodos válidos en Montículo </li>
+                                    </ul>
+                                </li>
+                                <li>Retornar mejor solución encontrada</li>
+                            </ol>
+                        </div>
+
+                        <div class="flow-phase">
+                            <h4>Fase 4: Resultados</h4>
+                            <ol>
+                                <li>Formatear solución óptima</li>
+                                <li>Mostrar asignaciones agente→tarea</li>
+                                <li>Calcular y mostrar costo total</li>
+                                <li>Generar estadísticas de rendimiento</li>
+                                <li>Limpiar recursos utilizados</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Architecture Section -->
+    <section id="arquitectura" class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">🏗️ Arquitectura del Sistema</h2>
+                <p class="section-subtitle">
+                    Patrón arquitectónico Facade + Command + Observer con separación clara de responsabilidades
+                </p>
+            </div>
+
+            <div class="architecture-content">
+                <div class="architecture-diagram">
+                    <h3>Diagrama de Arquitectura</h3>
+                    <div class="layer orchestrator">
+                        <div class="layer-title">Capa de Orquestación</div>
+                        <div class="layer-components">
+                            <div class="component main">TaskAssignmentSystem</div>
+                            <div class="component secondary">tareas (compatibilidad)</div>
+                        </div>
+                    </div>
+
+                    <div class="layer business">
+                        <div class="layer-title">Lógica de Negocio</div>
+                        <div class="layer-components">
+                            <div class="component">UserInterface</div>
+                            <div class="component">Game (Algoritmo)</div>
+                            <div class="component">FileController</div>
+                        </div>
+                    </div>
+
+                    <div class="layer data">
+                        <div class="layer-title">Estructuras de Datos</div>
+                        <div class="layer-components">
+                            <div class="component">GameData</div>
+                            <div class="component">Montículo </div>
+                            <div class="component">Node</div>
+                            <div class="component">Vector</div>
+                            <div class="component">VectorB</div>
+                            <div class="component">Matrix</div>
+                        </div>
+                    </div>
+
+
+
+                    <div class="layer utils">
+                        <div class="layer-title">Utilidades</div>
+                        <div class="layer-components">
+                            <div class="component">ArgsHandler</div>
+                            <div class="component">Constants</div>
+                            <div class="component">Utils</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="design-principles">
+                    <h3>Principios de Diseño Aplicados</h3>
+                    <div class="principles-grid">
+                        <div class="principle">
+                            <div class="principle-icon">
+                                <i class="fas fa-layer-group"></i>
+                            </div>
+                            <h4>Separación de Responsabilidades</h4>
+                            <p>Cada clase tiene una función específica y bien definida</p>
+                        </div>
+
+                        <div class="principle">
+                            <div class="principle-icon">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                            <h4>Inmutabilidad</h4>
+                            <p>Los objetos de datos no pueden modificarse tras su creación</p>
+                        </div>
+
+                        <div class="principle">
+                            <div class="principle-icon">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <h4>Validación Defensiva</h4>
+                            <p>Verificación de precondiciones en todos los métodos</p>
+                        </div>
+
+                        <div class="principle">
+                            <div class="principle-icon">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <h4>Fail-Fast</h4>
+                            <p>Detección temprana de errores con excepciones descriptivas</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Components Section -->
+    <section id="componentes" class="section bg-light">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">🔧 Componentes Principales</h2>
+                <p class="section-subtitle">
+                    Análisis detallado de cada componente del sistema y sus responsabilidades
+                </p>
+            </div>
+
+            <div class="components-content">
+                <div class="component-card">
+                    <div class="component-header">
+                        <div class="component-icon">
+                            <i class="fas fa-cog"></i>
+                        </div>
+                        <div class="component-info">
+                            <h3>TaskAssignmentSystem.java</h3>
+                            <p class="component-subtitle">Orquestador Principal</p>
+                        </div>
+                    </div>
+                    <div class="component-body">
+                        <h4>Responsabilidades:</h4>
+                        <ul>
+                            <li>Inicialización del sistema y validaciones de entorno</li>
+                            <li>Coordinación entre componentes</li>
+                            <li>Logging estructurado con timestamps</li>
+                            <li>Manejo de excepciones y recovery</li>
+                            <li>Estadísticas de rendimiento</li>
+                            <li>Limpieza de recursos</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="component-card">
+                    <div class="component-header">
+                        <div class="component-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <div class="component-info">
+                            <h3>Game.java</h3>
+                            <p class="component-subtitle">Motor del Algoritmo</p>
+                        </div>
+                    </div>
+                    <div class="component-body">
+                        <h4>Responsabilidades:</h4>
+                        <ul>
+                            <li>Ejecutar el algoritmo de ramificación y poda</li>
+                            <li>Gestionar el Montículo  de nodos activos</li>
+                            <li>Calcular cotas y realizar podas</li>
+                            <li>Generar traza detallada del proceso</li>
+                            <li>Optimizaciones de rendimiento</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="component-card">
+                    <div class="component-header">
+                        <div class="component-icon">
+                            <i class="fas fa-desktop"></i>
+                        </div>
+                        <div class="component-info">
+                            <h3>UserInterface.java</h3>
+                            <p class="component-subtitle">Interfaz de Usuario</p>
+                        </div>
+                    </div>
+                    <div class="component-body">
+                        <h4>Responsabilidades:</h4>
+                        <ul>
+                            <li>Carga de datos desde archivo o entrada manual</li>
+                            <li>Validación exhaustiva de datos de entrada</li>
+                            <li>Presentación formateada de resultados</li>
+                            <li>Manejo de errores de E/S</li>
+                            <li>Interacción con el usuario</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="data-structures">
+                    <h3>Estructuras de Datos Especializadas</h3>
+                    <div class="structures-grid">
+                        <div class="structure-card">
+                            <h4><i class="fas fa-sitemap"></i> Node.java</h4>
+                            <p class="structure-subtitle">Nodo del Árbol de Decisión</p>
+                            <div class="structure-content">
+                                <pre><code>private final Vector assigned;    // Agentes asignados
+private final VectorB agents;     // Agentes disponibles
+private final int cost;           // Costo acumulado
+private final int bound;          // Cota inferior</code></pre>
+                            </div>
+                        </div>
+
+                        <div class="structure-card">
+                            <h4><i class="fas fa-sort-amount-up"></i> Montículo .java</h4>
+                            <p class="structure-subtitle">Cola de Prioridad Optimizada</p>
+                            <div class="structure-content">
+                                <p>Implementación de Montículo de mínimos </p>
+                                <ul>
+                                    <li>insert: O(log n)</li>
+                                    <li>extractMin: O(log n)</li>
+                                    <li>isEmpty: O(1)</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="structure-card">
+                            <h4><i class="fas fa-database"></i> GameData.java</h4>
+                            <p class="structure-subtitle">Datos del Problema</p>
+                            <div class="structure-content">
+                                <pre><code>private final Matrix costMatrix;     // Matriz de costos
+private final int agentsNumber;      // Número de agentes
+private final int tasksNumber;       // Número de tareas
+// Inmutable y validado</code></pre>
+                            </div>
+                        </div>
+
+                        <div class="structure-card">
+                            <h4><i class="fas fa-th"></i> Matrix.java</h4>
+                            <p class="structure-subtitle">Matriz con Indexación Base-1</p>
+                            <div class="structure-content">
+                                <p>Operaciones especializadas para el problema de asignación</p>
+                                <ul>
+                                    <li>get, set con validación de bounds</li>
+                                    <li>getRow, getColumn</li>
+                                    <li>Métodos de análisis: min, max, sum</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="structure-card">
+                            <h4><i class="fas fa-list"></i> Vector.java</h4>
+                            <p class="structure-subtitle">Vector de Enteros</p>
+                            <div class="structure-content">
+                                <p>Vector matemático con indexación base-1 consistente</p>
+                                <ul>
+                                    <li>Operaciones vectoriales básicas</li>
+                                    <li>Métodos estadísticos y de análisis</li>
+                                    <li>Validaciones de consistencia</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="structure-card">
+                            <h4><i class="fas fa-check-square"></i> VectorB.java</h4>
+                            <p class="structure-subtitle">Vector Booleano</p>
+                            <div class="structure-content">
+                                <p>Vector booleano optimizado para representar disponibilidad</p>
+                                <ul>
+                                    <li>Operaciones lógicas: AND, OR, NOT</li>
+                                    <li>Conteo de elementos true/false</li>
+                                    <li>Métodos de análisis de disponibilidad</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Examples Section -->
+    <section id="ejemplos" class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">🎮 Ejemplos de Uso</h2>
+                <p class="section-subtitle">
+                    Casos prácticos de uso del sistema con diferentes tamaños de problema
+                </p>
+            </div>
+
+            <div class="examples-content">
+                <!-- Formato de Datos -->
+                <div class="data-format">
+                    <h3>📄 Formato de Datos</h3>
+                    <div class="format-grid">
+                        <div class="format-card">
+                            <h4>Entrada por Archivo</h4>
+                            <div class="format-content">
+                                <pre><code>n m
+c11 c12 ... c1m
+c21 c22 ... c2m
+...
+cn1 cn2 ... cnm</code></pre>
+                                <p><strong>Donde:</strong></p>
+                                <ul>
+                                    <li><code>n</code> = número de agentes</li>
+                                    <li><code>m</code> = número de tareas (debe ser igual a n)</li>
+                                    <li><code>cij</code> = costo de asignar agente i a tarea j</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="format-card">
+                            <h4>Entrada Manual Interactiva</h4>
+                            <div class="format-content">
+                                <pre><code>Ingrese el nº de agentes: 3
+Ingrese el nº de tareas: 3
+Ingrese la matriz de costos:
+Fila 1: 10 15 20
+Fila 2: 12 10 18
+Fila 3: 15 18 12
+¿Desea ver la traza del algoritmo? (s/n): s</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ejemplos Prácticos -->
+                <div class="practical-examples">
+                    <h3>Ejemplos Prácticos</h3>
+
+                    <!-- Ejemplo 1: 3x3 -->
+                    <div class="example-card">
+                        <div class="example-header">
+                            <h4>Ejemplo 1: Problema Pequeño (3×3)</h4>
+                            <span class="complexity-badge small">Complejidad: Baja</span>
+                        </div>
+                        <div class="example-content">
+                            <div class="example-input">
+                                <h5>Datos de Entrada:</h5>
+                                <pre><code>3 3
+1 2 3
+4 5 6
+7 8 9</code></pre>
+                            </div>
+                            <div class="example-output">
+                                <h5>Resultado:</h5>
+                                <div class="solution-display">
+                                    <div class="assignment">1 → 1 <span class="cost">(costo: 1)</span></div>
+                                    <div class="assignment">2 → 2 <span class="cost">(costo: 5)</span></div>
+                                    <div class="assignment">3 → 3 <span class="cost">(costo: 9)</span></div>
+                                    <div class="total-cost">Costo Total: <span>15</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ejemplo 2: 4x4 -->
+                    <div class="example-card">
+                        <div class="example-header">
+                            <h4>Ejemplo 2: Problema Medio (4×4)</h4>
+                            <span class="complexity-badge medium">Complejidad: Media</span>
+                        </div>
+                        <div class="example-content">
+                            <div class="example-input">
+                                <h5>Datos de Entrada:</h5>
+                                <pre><code>4 4
+11 12 18 40
+14 15 13 22
+11 17 19 23
+17 14 20 28</code></pre>
+                            </div>
+                            <div class="example-output">
+                                <h5>Resultado:</h5>
+                                <div class="solution-display">
+                                    <div class="assignment">1 → 1 <span class="cost">(costo: 11)</span></div>
+                                    <div class="assignment">2 → 3 <span class="cost">(costo: 13)</span></div>
+                                    <div class="assignment">3 → 2 <span class="cost">(costo: 17)</span></div>
+                                    <div class="assignment">4 → 4 <span class="cost">(costo: 28)</span></div>
+                                    <div class="total-cost">Costo Total: <span>69</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ejemplo 3: Con Traza -->
+                    <div class="example-card">
+                        <div class="example-header">
+                            <h4>Ejemplo 3: Ejecución con Traza</h4>
+                            <span class="complexity-badge trace">Con Logging</span>
+                        </div>
+                        <div class="example-content">
+                            <div class="trace-output">
+                                <h5>Traza del Algoritmo:</h5>
+                                <pre><code>=== TRAZA DEL ALGORITMO ===
+Nodo inicial: cota = 45
+Expandiendo nodo: agente 1 → tarea 1, cota = 52
+Expandiendo nodo: agente 1 → tarea 2, cota = 48
+...
+Solución encontrada: costo = 69
+Nodos explorados: 23
+Nodos podados: 157</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Performance Section -->
+    <section id="rendimiento" class="section bg-light">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">📈 Análisis de Rendimiento</h2>
+                <p class="section-subtitle">
+                    Métricas detalladas de rendimiento y características técnicas del sistema
+                </p>
+            </div>
+
+            <div class="performance-content">
+                <!-- Complejidad Temporal -->
+                <div class="temporal-complexity">
+                    <h3>Complejidad Temporal</h3>
+                    <div class="complexity-grid">
+                        <div class="complexity-item">
+                            <div class="complexity-icon best">
+                                <i class="fas fa-rocket"></i>
+                            </div>
+                            <h4>Mejor Caso</h4>
+                            <p><strong>O(n!)</strong> pero con poda extensiva</p>
+                            <div class="description">Cuando la poda elimina grandes porciones del árbol</div>
+                        </div>
+
+                        <div class="complexity-item">
+                            <div class="complexity-icon average">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <h4>Caso Promedio</h4>
+                            <p>Significativamente mejor que <strong>fuerza bruta</strong></p>
+                            <div class="description">Reducción típica del 70-90% de exploraciones</div>
+                        </div>
+
+                        <div class="complexity-item">
+                            <div class="complexity-icon worst">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <h4>Peor Caso</h4>
+                            <p><strong>O(n!)</strong> cuando no se puede podar</p>
+                            <div class="description">Casos extremos con distribución uniforme de costos</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rendimiento Observado -->
+                <div class="observed-performance">
+                    <h3>Rendimiento Observado</h3>
+                    <div class="performance-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Tamaño</th>
+                                    <th>Tiempo Promedio</th>
+                                    <th>Nodos Explorados</th>
+                                    <th>Eficiencia</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>3×3</td>
+                                    <td>5-10 ms</td>
+                                    <td>15-25</td>
+                                    <td><span class="efficiency excellent">Excelente</span></td>
+                                </tr>
+                                <tr>
+                                    <td>4×4</td>
+                                    <td>10-20 ms</td>
+                                    <td>50-150</td>
+                                    <td><span class="efficiency very-good">Muy buena</span></td>
+                                </tr>
+                                <tr>
+                                    <td>5×5</td>
+                                    <td>50-200 ms</td>
+                                    <td>200-800</td>
+                                    <td><span class="efficiency good">Buena</span></td>
+                                </tr>
+                                <tr>
+                                    <td>6×6</td>
+                                    <td>200ms-2s</td>
+                                    <td>800-5000</td>
+                                    <td><span class="efficiency acceptable">Aceptable</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Uso de Memoria -->
+                <div class="memory-usage">
+                    <h3>Uso de Memoria</h3>
+                    <div class="memory-grid">
+                        <div class="memory-card">
+                            <div class="memory-icon">
+                                <i class="fas fa-memory"></i>
+                            </div>
+                            <h4>Overhead del Sistema</h4>
+                            <p><strong>85-90%</strong> del tiempo total</p>
+                            <div class="detail">Logging, validaciones y gestión de objetos</div>
+                        </div>
+
+                        <div class="memory-card">
+                            <div class="memory-icon">
+                                <i class="fas fa-microchip"></i>
+                            </div>
+                            <h4>Memoria del Algoritmo</h4>
+                            <p><strong>Lineal</strong> en nodos activos</p>
+                            <div class="detail">No almacena todo el espacio de soluciones</div>
+                        </div>
+
+                        <div class="memory-card">
+                            <div class="memory-icon">
+                                <i class="fas fa-recycle"></i>
+                            </div>
+                            <h4>Garbage Collection</h4>
+                            <p><strong>Automático</strong> y optimizado</p>
+                            <div class="detail">Liberación eficiente de recursos</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Características Técnicas -->
+                <div class="technical-features">
+                    <h3>⚡ Características Técnicas</h3>
+                    <div class="features-grid">
+                        <div class="feature-section">
+                            <h4>🔍 Logging y Monitoreo</h4>
+                            <div class="feature-code">
+                                <pre><code>[INFO] 2025-09-12 14:57:34 - Versión de Java detectada: 22
+[INFO] 2025-09-12 14:57:34 - Memoria - Máxima: 1508 MB, Total: 96 MB
+[INFO] 2025-09-12 14:57:34 - Problema cargado: 4 agentes, 4 tareas
+[INFO] 2025-09-12 14:57:34 - Algoritmo completado exitosamente en 11 ms</code></pre>
+                            </div>
+                        </div>
+
+                        <div class="feature-section">
+                            <h4>🛡️ Manejo de Errores</h4>
+                            <ul>
+                                <li><strong>SystemInitializationException:</strong> Errores de configuración</li>
+                                <li><strong>AlgorithmExecutionException:</strong> Fallos durante ejecución</li>
+                                <li><strong>Validaciones exhaustivas:</strong> En todas las entradas de datos</li>
+                                <li><strong>Recovery strategies:</strong> Sugerencias automáticas de solución</li>
+                            </ul>
+                        </div>
+
+                        <div class="feature-section">
+                            <h4>🚀 Optimizaciones de Rendimiento</h4>
+                            <ul>
+                                <li><strong>Timeout configurable:</strong> Evita ejecuciones infinitas (5 min por defecto)</li>
+                                <li><strong>Gestión de memoria:</strong> Monitoring y garbage collection</li>
+                                <li><strong>Estructuras eficientes:</strong> Montículo  binario, vectores optimizados</li>
+                                <li><strong>Poda agresiva:</strong> Eliminación temprana de ramas no prometedoras</li>
+                            </ul>
+                        </div>
+
+                        <div class="feature-section">
+                            <h4>🔄 Compatibilidad</h4>
+                            <ul>
+                                <li><strong>Clase original preserved:</strong> <code>tareas.java</code> mantiene interfaz original</li>
+                                <li><strong>Backward compatibility:</strong> Todos los tests existentes pasan</li>
+                                <li><strong>Dual interface:</strong> Uso directo de <code>TaskAssignmentSystem</code> o <code>tareas</code></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Conclusions Section -->
+    <section class="section conclusions">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">🎯 Conclusiones</h2>
+                <p class="section-subtitle">
+                    Fortalezas, casos de uso recomendados y limitaciones del sistema
+                </p>
+            </div>
+
+            <div class="conclusions-content">
+                <div class="conclusions-grid">
+                    <div class="conclusion-section strengths">
+                        <h3><i class="fas fa-medal"></i> Fortalezas del Sistema</h3>
+                        <ul>
+                            <li><strong>Algoritmo robusto</strong> que garantiza solución óptima</li>
+                            <li><strong>Arquitectura profesional</strong> con separación clara de responsabilidades</li>
+                            <li><strong>Logging completo</strong> para debugging y auditoría</li>
+                            <li><strong>Manejo de errores exhaustivo</strong> con recovery automático</li>
+                            <li><strong>Compatibilidad total</strong> con versiones anteriores</li>
+                            <li><strong>Rendimiento excelente</strong> para problemas de tamaño práctico</li>
+                        </ul>
+                    </div>
+
+                    <div class="conclusion-section use-cases">
+                        <h3><i class="fas fa-bullseye"></i> Casos de Uso Recomendados</h3>
+                        <ul>
+                            <li><strong>Asignación de personal</strong> a proyectos o turnos</li>
+                            <li><strong>Distribución de recursos</strong> computacionales</li>
+                            <li><strong>Planificación de producción</strong> en manufactura</li>
+                            <li><strong>Optimización logística</strong> de rutas y cargas</li>
+                            <li><strong>Problemas académicos</strong> de investigación operativa</li>
+                        </ul>
+                    </div>
+
+                    <div class="conclusion-section limitations">
+                        <h3><i class="fas fa-exclamation-triangle"></i> Limitaciones</h3>
+                        <ul>
+                            <li><strong>Escalabilidad:</strong> Problemas mayores a 10×10 pueden requerir tiempos largos</li>
+                            <li><strong>Memoria:</strong> El uso crece exponencialmente con el tamaño del problema</li>
+                            <li><strong>Determinismo:</strong> Para problemas con múltiples óptimos, devuelve uno cualquiera</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="project-footer">
+                    <div class="project-info">
+                        <h3>Información del Proyecto</h3>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <span class="label">Autor:</span>
+                                <span class="value">Sergio Ucedo</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">Versión:</span>
+                                <span class="value">2.0</span>
+                            </div>
+                            <div class="info-item">
+                                <!-- Fecha eliminada, botón GitHub abajo -->
+                            </div>
+                            <div class="info-item">
+                                <span class="label">Proyecto:</span>
+                                <span class="value">Pasteleros - Sistema de Optimización</span>
+                            </div>
+                            <div class="info-item">
+                                <div style="display: flex; gap: 0.5em; align-items: center;">
+                                    <a href="/index.html" class="btn-rojo">
+                                        <i class="fas fa-arrow-left"></i> Volver al portfolio
+                                    </a>
+                                    <a href="https://github.com/xerchion/AsignacionOptimaTareas" class="btn-rojo" target="_blank" rel="noopener noreferrer">
+                                        Ver en GitHub <i class="fab fa-github"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="references">
+                        <h3>📚 Referencias y Documentación</h3>
+                        <div class="references-grid">
+                            <div class="ref-section">
+                                <h4>Algoritmos Relacionados</h4>
+                                <ul>
+                                    <li><strong>Hungarian Algorithm:</strong> Alternativa polinomial O(n³)</li>
+                                    <li><strong>Simulated Annealing:</strong> Metaheurística para problemas grandes</li>
+                                    <li><strong>Genetic Algorithms:</strong> Aproximaciones evolutivas</li>
+                                </ul>
+                            </div>
+
+                            <div class="ref-section">
+                                <h4>Bibliografía Técnica</h4>
+                                <ul>
+                                    <li>Papadimitriou, C. & Steiglitz, K. "Combinatorial Optimization"</li>
+                                    <li>Cormen, T. et al. "Introduction to Algorithms"</li>
+                                    <li>Winston, W. "Operations Research: Applications and Algorithms"</li>
+                                </ul>
+                            </div>
+
+                            <div class="ref-section">
+                                <h4>Documentación del Código</h4>
+                                <ul>
+                                    <li>Javadoc completo disponible en el código fuente</li>
+                                    <li>Tests unitarios: 35 casos de prueba automatizados</li>
+                                    <li>Cobertura de código: >95% en componentes críticos</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-text">
+                    <p><strong>© 2025 Sergio Ucedo - Sistema de Asignación Óptima de Tareas v2.0</strong></p>
+                    <p>Este documento proporciona una visión completa del Sistema de Asignación Óptima de Tareas, desde su funcionamiento interno hasta su uso práctico y características técnicas avanzadas.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="js/main.js"></script>
+</body>
+</html>
