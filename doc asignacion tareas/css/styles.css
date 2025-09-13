@@ -1,7 +1,8 @@
 /* ===== VARIABLES CSS ===== */
 :root {
     /* Colores principales */
-    --primary-color: #e63946; /* Rojo principal del portfolio */
+    --primary-color: #e63946;
+    /* Rojo principal del portfolio */
     --primary-dark: #b71c1c;
     --primary-light: #ff6f61;
     --secondary-color: #22223b;
@@ -281,11 +282,14 @@ pre code {
     outline: none;
     margin: 0.2em 0;
 }
+
 .btn-rojo i {
     font-size: 1.1em;
     margin-left: 0.3em;
 }
-.btn-rojo:hover, .btn-rojo:focus {
+
+.btn-rojo:hover,
+.btn-rojo:focus {
     background: var(--primary-dark);
     color: #fff;
     box-shadow: var(--shadow-lg);
