@@ -1,7 +1,0 @@
-
-Requisitos iniciales y para todo el proyecto:
--Recuerda siempre que la web debe ser responsive,
-    cualquier cambio que hagas que sirva para moviles y pc
-
-Tareas a realizar:
-- 
