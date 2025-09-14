@@ -14,13 +14,33 @@
 
 ### 2. Crear Personal Access Token
 
-1. Ve a **GitHub Settings** → **Developer settings** → **Personal access tokens** → **Tokens (classic)**
-2. Click en **"Generate new token (classic)"**
-3. Configuración del token:
-   - **Note**: "Sync to public portfolio repo"
+**Opción A: Ruta Nueva (Recomendada)**
+1. Ve a tu **perfil de GitHub** (click en tu avatar arriba a la derecha)
+2. **Settings** → **Developer settings** → **Personal access tokens** → **Fine-grained tokens**
+3. Click en **"Generate new token"**
+4. Configuración del token:
+   - **Token name**: "Sync to public portfolio repo"
    - **Expiration**: 1 year (o el que prefieras)
+   - **Repository access**: "Selected repositories" → Selecciona tu repositorio público
+   - **Permissions**:
+     - Repository permissions → **Contents**: Read and write
+     - Repository permissions → **Metadata**: Read
+5. Click **"Generate token"**
+6. **Copiar el token generado** (no podrás verlo después)
+
+**Opción B: Ruta Clásica (Si no encuentras la anterior)**
+1. Ve a tu **perfil de GitHub** → **Settings**
+2. Scroll hacia abajo en el menú izquierdo hasta **"Developer settings"** (al final)
+3. **Personal access tokens** → **Tokens (classic)**
+4. Click en **"Generate new token (classic)"**
+5. Configuración del token:
+   - **Note**: "Sync to public portfolio repo"
+   - **Expiration**: 1 year
    - **Scopes**: ✅ Marcar `repo` (acceso completo a repositorios)
-4. **Copiar el token generado** (no lo perderás después)
+6. **Copiar el token generado**
+
+**Si aún no encuentras "Developer settings":**
+- Ve directamente a: https://github.com/settings/tokens
 
 ### 3. Configurar Secret en Repositorio Privado
 
@@ -33,13 +53,31 @@
 
 ### 4. Actualizar URLs en el Workflow
 
-Edita el archivo `.github/workflows/sync-to-public.yml` y cambia:
+**¿Qué necesitas hacer?**
+Cambiar el nombre del repositorio público en el código de automatización para que coincida con el que creaste.
 
+**Pasos detallados:**
+
+1. **Abre el archivo**: `.github/workflows/sync-to-public.yml` en VS Code
+2. **Busca la línea 26** que dice:
+   ```yaml
+   git clone https://${{ secrets.GH_TOKEN }}@github.com/xerchion/portfolio-web.git public-repo
+   ```
+3. **Cambia `portfolio-web`** por el nombre de TU repositorio público
+4. **Ejemplo**: Si creaste un repo llamado `mi-portfolio`, cambiarías por:
+   ```yaml
+   git clone https://${{ secrets.GH_TOKEN }}@github.com/xerchion/mi-portfolio.git public-repo
+   ```
+
+**También actualiza las líneas de los comentarios:**
+- Línea 35 en README.md
+- Línea 41 en echo (si las tienes)
+
+**📝 Ejemplo completo:**
+Si tu repositorio público se llama `sergio-portfolio`, la línea quedaría:
 ```yaml
-git clone https://${{ secrets.GH_TOKEN }}@github.com/xerchion/portfolio-web.git public-repo
+git clone https://${{ secrets.GH_TOKEN }}@github.com/xerchion/sergio-portfolio.git public-repo
 ```
-
-Por la URL de TU repositorio público.
 
 ### 5. Configurar GitHub Pages
 

@@ -8,23 +8,23 @@ on:
 jobs:
   sync:
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout private repo
       uses: actions/checkout@v4
       with:
         ref: produccion
         fetch-depth: 0
-        
+
     - name: Setup Git
       run: |
         git config --global user.name "GitHub Actions"
         git config --global user.email "actions@github.com"
-        
+
     - name: Clone public repository
       run: |
         git clone https://${{ secrets.GH_TOKEN }}@github.com/xerchion/portfolio-web.git public-repo
-        
+
     - name: Sync files
       run: |
         find public-repo -mindepth 1 -name '.git' -prune -o -type f -delete
@@ -32,7 +32,7 @@ jobs:
         cp -r index.html public-repo/
         cp -r doc-algoritmo.html public-repo/
         cp -r assets/ public-repo/
-        
+
     - name: Create README
       run: |
         echo "# Portfolio Web" > public-repo/README.md
