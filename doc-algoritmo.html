@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Documentación Técnica - Algoritmo de Asignación Óptima</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+    <link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body class="bg-gray-900 text-white">
+<div class="container mx-auto px-6 py-8">
+    <header class="flex justify-center items-center">
+        <nav id="mainNav" class="hidden md:flex items-center space-x-8">
+            <a class="text-rojo hover:text-white" href="index.html#home">Inicio</a>
+            <a class="text-rojo hover:text-white" href="index.html#about">Sobre mí</a>
+            <a class="text-rojo hover:text-white" href="index.html#work">Trabajos</a>
+            <a class="text-rojo hover:text-white" href="index.html#contacts">Contacto</a>
+        </nav>
+        <!-- Menú móvil -->
+        <button class="md:hidden" id="menuBtn">
+            <span class="material-icons">menu</span>
+        </button>
+        <div id="mobileMenu" class="fixed inset-0 bg-gray-900 bg-opacity-95 z-50 flex-col items-center justify-center hidden">
+            <button id="closeMenu" class="absolute top-6 right-6 text-white text-3xl"><span class="material-icons">close</span></button>
+            <nav class="flex flex-col space-y-8 items-center mt-24">
+                <a class="text-rojo text-2xl hover:text-white" href="index.html#home">Inicio</a>
+                <a class="text-rojo text-2xl hover:text-white" href="index.html#about">Sobre mí</a>
+                <a class="text-rojo text-2xl hover:text-white" href="index.html#work">Trabajos</a>
+                <a class="text-rojo text-2xl hover:text-white" href="index.html#contacts">Contacto</a>
+                <a href="index.html#contacts" class="border border-rojo px-6 py-3 rounded-full text-lg btn-rojo hover:bg-opacity-80">Contáctame</a>
+            </nav>
+        </div>
+    </header>
+    <main class="mt-20">
+        <section class="mt-12">
+            <div class="bg-gray-800 rounded-lg p-8">
+                <h2 class="text-3xl font-bold text-rojo mb-6">Sistema de Asignación Óptima de Tareas</h2>
+                <p class="text-xl text-gray-300 mb-8">Explicación técnica, arquitectura y funcionamiento del sistema de optimización basado en ramificación y poda.</p>
+
+                <!-- Botones de acción -->
+                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                    <a href="index.html" class="bg-gray-700 hover:bg-gray-600 text-white px-4 sm:px-6 py-3 rounded-full text-base sm:text-lg font-semibold inline-flex items-center transition-colors w-full sm:w-auto justify-center">
+                        <i class="material-icons mr-2 text-sm sm:text-base">arrow_back</i>
+                        <span class="text-sm sm:text-base">Volver</span>
+                    </a>
+                    <a href="https://github.com/xerchion/sistema-asignacion-tareas" target="_blank" class="btn-rojo px-4 sm:px-6 py-3 rounded-full text-base sm:text-lg font-semibold inline-flex items-center w-full sm:w-auto justify-center">
+                        <i class="material-icons mr-2 text-sm sm:text-base">code</i>
+                        <span class="text-sm sm:text-base">Code</span>
+                    </a>
+
+                </div>
+            </div>
+        </section>
+
+        <section class="mt-12">
+            <h2 class="text-4xl font-bold mb-8">Introducción y Propósito</h2>
+            <div class="bg-gray-800 rounded-lg p-6">
+                <p class="text-gray-300 mb-4">El <span class="text-rojo font-semibold">Sistema de Asignación Óptima de Tareas</span> es una aplicación Java que resuelve el problema clásico de asignación de tareas a agentes, minimizando el costo total mediante un algoritmo de <span class="text-rojo font-semibold">ramificación y poda</span> (branch-and-bound).</p>
+                <ul class="space-y-2 text-gray-300">
+                    <li><span class="text-rojo">•</span> <strong>Optimización:</strong> Encontrar la asignación de menor costo posible</li>
+                    <li><span class="text-rojo">•</span> <strong>Eficiencia:</strong> Resolver problemas de tamaño medio en tiempos razonables</li>
+                    <li><span class="text-rojo">•</span> <strong>Robustez:</strong> Manejo profesional de errores y validaciones</li>
+                    <li><span class="text-rojo">•</span> <strong>Trazabilidad:</strong> Logging detallado y estadísticas de rendimiento</li>
+                    <li><span class="text-rojo">•</span> <strong>Usabilidad:</strong> Interfaz simple tanto por archivo como interactiva</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="mt-12">
+            <h2 class="text-4xl font-bold mb-8">Descripción del Problema</h2>
+            <div class="bg-gray-800 rounded-lg p-6">
+                <p class="text-gray-300 mb-4">Dado <span class="text-rojo font-semibold">n agentes</span> y <span class="text-rojo font-semibold">n tareas</span> con una matriz de costos C[i][j], el objetivo es encontrar una asignación uno-a-uno que minimice el costo total.</p>
+                <div class="bg-gray-900 rounded-lg p-4 mt-4 overflow-x-auto">
+                    <pre class="text-xs sm:text-sm text-gray-300 whitespace-pre-wrap"><code>Agentes: [Trabajador1, Trabajador2, Trabajador3]
+Tareas:  [TareaA, TareaB, TareaC]
+
+Matriz de Costos:
+      TareaA TareaB TareaC
+Trab1   10     15     20
+Trab2   12     10     18
+Trab3   15     18     12
+
+Solución Óptima:
+- Trabajador1 → TareaA (costo: 10)
+- Trabajador2 → TareaB (costo: 10)
+- Trabajador3 → TareaC (costo: 12)
+COSTO TOTAL: 32</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <section class="mt-12">
+            <h2 class="text-2xl sm:text-4xl font-bold mb-8">Algoritmo Implementado</h2>
+            <div class="bg-gray-800 rounded-lg p-6">
+                <h3 class="text-2xl font-semibold text-rojo mb-4">Ramificación y Poda (Branch and Bound)</h3>
+                <ul class="space-y-3 text-gray-300">
+                    <li><span class="text-rojo">•</span> <strong>Estructura del Árbol de Decisión:</strong> Se exploran todas las asignaciones posibles, podando ramas no óptimas.</li>
+                    <li><span class="text-rojo">•</span> <strong>Función de Cota:</strong> Calcula el coste mínimo posible para cada nodo parcial.</li>
+                    <li><span class="text-rojo">•</span> <strong>Estrategia de Poda:</strong> Si la cota de un nodo es mayor o igual al mejor coste conocido, se descarta esa rama.</li>
+                    <li><span class="text-rojo">•</span> <strong>Optimizaciones:</strong> Heap binario, precálculo de cotas, validaciones y poda anticipada.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="mt-12">
+            <h2 class="text-4xl font-bold mb-8">Arquitectura y Componentes</h2>
+            <div class="bg-gray-800 rounded-lg p-6">
+                <p class="text-gray-300 mb-4">El sistema sigue un patrón <span class="text-rojo font-semibold">Facade + Command + Observer</span> con separación clara de responsabilidades.</p>
+                <ul class="space-y-2 text-gray-300">
+                    <li><span class="text-rojo">•</span> <strong>TaskAssignmentSystem:</strong> Orquestador principal</li>
+                    <li><span class="text-rojo">•</span> <strong>Game:</strong> Motor del algoritmo</li>
+                    <li><span class="text-rojo">•</span> <strong>UserInterface:</strong> Interfaz de usuario</li>
+                    <li><span class="text-rojo">•</span> <strong>Heap, Node, GameData, Matrix, Vector, VectorB:</strong> Estructuras de datos especializadas</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="mt-12">
+            <h2 class="text-4xl font-bold mb-8">Ejemplo de Uso</h2>
+            <div class="bg-gray-800 rounded-lg p-6">
+                <div class="bg-gray-900 rounded-lg p-4">
+                    <pre class="text-sm text-gray-300"><code>Entrada:
+3 3
+10 15 20
+12 10 18
+15 18 12
+
+Salida:
+Solución Óptima:
+1 → 1 (costo: 10)
+2 → 2 (costo: 10)
+3 → 3 (costo: 12)
+Costo Total: 32</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <section class="mt-12">
+            <h2 class="text-4xl font-bold mb-8">Características Técnicas</h2>
+            <div class="bg-gray-800 rounded-lg p-6">
+                <ul class="space-y-2 text-gray-300">
+                    <li><span class="text-rojo">•</span> Logging y monitoreo detallado</li>
+                    <li><span class="text-rojo">•</span> Manejo de errores y validaciones exhaustivas</li>
+                    <li><span class="text-rojo">•</span> Optimizaciones de rendimiento y gestión de memoria</li>
+                    <li><span class="text-rojo">•</span> Compatibilidad y cobertura de tests</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="mt-12">
+            <h2 class="text-4xl font-bold mb-8">Conclusiones</h2>
+            <div class="bg-gray-800 rounded-lg p-6">
+                <ul class="space-y-2 text-gray-300">
+                    <li><span class="text-rojo">•</span> Algoritmo robusto y eficiente</li>
+                    <li><span class="text-rojo">•</span> Arquitectura profesional y mantenible</li>
+                    <li><span class="text-rojo">•</span> Rendimiento excelente para problemas prácticos</li>
+                    <li><span class="text-rojo">•</span> Escalabilidad limitada para problemas muy grandes</li>
+                </ul>
+            </div>
+        </section>
+
+        <div class="mt-12 text-center">
+        </div>
+    </main>
+</div>
+<script src="assets/scripts.js"></script>
+</body>
+</html>
